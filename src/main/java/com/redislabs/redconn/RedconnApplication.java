@@ -23,7 +23,6 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.exceptions.JedisConnectionException;
 
 @SpringBootApplication
 @Slf4j
@@ -85,22 +84,21 @@ public class RedconnApplication implements CommandLineRunner {
 						log.debug("Successfully performed GET on all {} keys", numKeys);
 					}
 					Thread.sleep(config.getSleep().getGet());
-				} catch (JedisConnectionException e) {
+				} catch (Exception e) {
 					jedis.close();
+					jedis = null;
 					log.info("Disconnected");
 					long startTime = System.nanoTime();
-					boolean connected = false;
-					while (!connected) {
+					while (jedis == null) {
 						try {
 							jedis = jedisPool.getResource();
-							connected = true;
-							long durationInNanos = System.nanoTime() - startTime;
-							double durationInSec = (double) Duration.ofNanos(durationInNanos).toMillis() / 1000;
-							log.info("Reconnected after: {}", String.format("%.3f", durationInSec));
-						} catch (JedisConnectionException e2) {
+						} catch (Exception e2) {
 							Thread.sleep(config.getSleep().getReconnect());
 						}
 					}
+					long durationInNanos = System.nanoTime() - startTime;
+					double durationInSec = (double) Duration.ofNanos(durationInNanos).toMillis() / 1000;
+					log.info("Reconnected after {} seconds", String.format("%.3f", durationInSec));
 				}
 			}
 		} finally {

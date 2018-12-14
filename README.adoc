@@ -28,8 +28,7 @@ java -jar target/redconn-0.0.1-SNAPSHOT.jar --host=redis-12000.demo.redislabs.co
 
 === With SSL
 -----
-java -jar target/redconn-0.0.1-SNAPSHOT.jar -Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustStoreType=jks -Djavax.net.ssl.trustStorePassword=<password> -Djavax.net.ssl.keyStore=/path/to/keystore.p12 -Djavax.net.ssl.keyStoreType=pkcs12 -Djavax.net.ssl.keyStorePassword=<password>
---host=redis-12000.demo.redislabs.com --port=12000 --password=<password> --ssl=true --timeout=500
+java -Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustStoreType=jks -Djavax.net.ssl.trustStorePassword=<password> -Djavax.net.ssl.keyStore=/path/to/keystore.p12 -Djavax.net.ssl.keyStoreType=pkcs12 -Djavax.net.ssl.keyStorePassword=<password> -jar target/redconn-0.0.1-SNAPSHOT.jar --host=redis-12000.demo.redislabs.com --port=12000 --password=<password> --ssl=true --timeout=500
 -----
 
 == Configuration

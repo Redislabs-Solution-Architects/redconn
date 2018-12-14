@@ -25,7 +25,8 @@ public class RedconnConfiguration {
 	private SleepConfiguration sleep = new SleepConfiguration();
 	private String clientName = "redconn";
 	private int numKeys = 100;
-	private DnsConfiguration dns = new DnsConfiguration();
+	private String dnsTtl = "0";
+	private String dnsNegativeTtl = "0";
 	private int database = 0;
 	private String host = "localhost";
 	private String password;

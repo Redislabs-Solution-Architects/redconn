@@ -39,10 +39,10 @@ public class RedconnApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		log.info("Setting {}={}", DNS_CACHE_TTL, config.getDns().getTtl());
-		Security.setProperty(DNS_CACHE_TTL, config.getDns().getTtl());
-		log.info("Setting {}={}", DNS_CACHE_NEGATIVE_TTL, config.getDns().getNegativeTtl());
-		Security.setProperty(DNS_CACHE_NEGATIVE_TTL, config.getDns().getNegativeTtl());
+		log.info("Setting {}={}", DNS_CACHE_TTL, config.getDnsTtl());
+		Security.setProperty(DNS_CACHE_TTL, config.getDnsTtl());
+		log.info("Setting {}={}", DNS_CACHE_NEGATIVE_TTL, config.getDnsNegativeTtl());
+		Security.setProperty(DNS_CACHE_NEGATIVE_TTL, config.getDnsNegativeTtl());
 		switch (config.getDriver()) {
 		case Lettuce:
 			runLettuce();

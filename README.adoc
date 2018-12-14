@@ -60,11 +60,11 @@ java -Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustSto
 |Jedis client name
 |`redconn`
 
-|`dns.ttl`
+|`dns-ttl`
 |Number of seconds to cache a successful name service lookup
 |`0`
 
-|`dns.negative-ttl`
+|`dns-negative-ttl`
 |Number of seconds to cache a unsuccessful name service lookup
 |`0`
 |===

@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ClientOptions.Builder;
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.SslOptions;
 import io.lettuce.core.api.StatefulRedisConnection;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +28,10 @@ import redis.clients.jedis.JedisPool;
 @Slf4j
 public class RedconnApplication implements CommandLineRunner {
 
+	private static final String DNS_CACHE_TTL = "networkaddress.cache.ttl";
+	private static final String DNS_CACHE_NEGATIVE_TTL = "networkaddress.cache.negative.ttl";
 	@Autowired
 	private RedconnConfiguration config;
-	@Autowired
-	private RedisProperties redisProperties;
 
 	public static void main(String[] args) {
 		SpringApplication.run(RedconnApplication.class, args);
@@ -39,13 +39,10 @@ public class RedconnApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		DnsConfiguration dnsConfig = config.getDns();
-		if (dnsConfig.getTtl() != null) {
-			Security.setProperty("networkaddress.cache.ttl", dnsConfig.getTtl());
-		}
-		if (dnsConfig.getNegativeTtl() != null) {
-			Security.setProperty("networkaddress.cache.negative.ttl", dnsConfig.getNegativeTtl());
-		}
+		log.info("Setting {}={}", DNS_CACHE_TTL, config.getDns().getTtl());
+		Security.setProperty(DNS_CACHE_TTL, config.getDns().getTtl());
+		log.info("Setting {}={}", DNS_CACHE_NEGATIVE_TTL, config.getDns().getNegativeTtl());
+		Security.setProperty(DNS_CACHE_NEGATIVE_TTL, config.getDns().getNegativeTtl());
 		switch (config.getDriver()) {
 		case Lettuce:
 			runLettuce();
@@ -62,16 +59,18 @@ public class RedconnApplication implements CommandLineRunner {
 		sslParameters.setEndpointIdentificationAlgorithm("HTTPS");
 		HostnameVerifier hostnameVerifier = null;
 		GenericObjectPoolConfig<Object> poolConfig = new GenericObjectPoolConfig<>();
-		JedisPool jedisPool = new JedisPool(poolConfig, redisProperties.getHost(), redisProperties.getPort(),
-				config.getTimeout(), redisProperties.getPassword(), redisProperties.getDatabase(),
-				config.getClientName(), redisProperties.isSsl(), sslSocketFactory, sslParameters, hostnameVerifier);
+		log.info("Connecting using Jedis with connection-timeout={} and socket-timeout={}",
+				config.getConnectionTimeout(), config.getSocketTimeout());
+		JedisPool jedisPool = new JedisPool(poolConfig, config.getHost(), config.getPort(),
+				config.getConnectionTimeout(), config.getSocketTimeout(), config.getPassword(), config.getDatabase(),
+				config.getClientName(), config.isSsl(), sslSocketFactory, sslParameters, hostnameVerifier);
 		try {
-			int numKeys = config.getNumKeys();
 			Jedis jedis = jedisPool.getResource();
+			log.info("Connected to {}", jedis.getClient().getHost());
+			int numKeys = config.getNumKeys();
 			for (int index = 0; index < numKeys; index++) {
 				jedis.set("key:" + index, "value" + index);
 			}
-			log.info("Connected: \n{}", jedis.info());
 			while (true) {
 				try {
 					for (int index = 0; index < numKeys; index++) {
@@ -108,7 +107,7 @@ public class RedconnApplication implements CommandLineRunner {
 	}
 
 	private void runLettuce() {
-		RedisClient client = RedisClient.create(redisProperties.getUrl());
+		RedisClient client = RedisClient.create(RedisURI.create(config.getHost(), config.getPort()));
 		client.setOptions(getLettuceClientOptions());
 		StatefulRedisConnection<String, String> connection = client.connect();
 		log.info(connection.sync().info());
@@ -116,15 +115,15 @@ public class RedconnApplication implements CommandLineRunner {
 
 	private ClientOptions getLettuceClientOptions() {
 		Builder builder = ClientOptions.builder();
-		if (config.getSsl() != null) {
-			builder.sslOptions(getSslOptions(config.getSsl()));
+		if (config.isSsl()) {
+			builder.sslOptions(getSslOptions());
 		}
 		return builder.build();
 	}
 
-	private SslOptions getSslOptions(SslConfiguration sslConfig) {
+	private SslOptions getSslOptions() {
 		io.lettuce.core.SslOptions.Builder builder = SslOptions.builder();
-		switch (sslConfig.getProvider()) {
+		switch (config.getSslProvider()) {
 		case OpenSsl:
 			builder.openSslProvider();
 			break;
@@ -132,8 +131,8 @@ public class RedconnApplication implements CommandLineRunner {
 			builder.jdkSslProvider();
 			break;
 		}
-		if (sslConfig.getKeystore() != null) {
-			KeystoreConfiguration keystoreConfig = sslConfig.getKeystore();
+		if (config.getKeystore() != null) {
+			KeystoreConfiguration keystoreConfig = config.getKeystore();
 			File file = new File(keystoreConfig.getFile());
 			if (keystoreConfig.getPassword() == null) {
 				builder.keystore(file);
@@ -141,8 +140,8 @@ public class RedconnApplication implements CommandLineRunner {
 				builder.keystore(file, keystoreConfig.getPassword().toCharArray());
 			}
 		}
-		if (sslConfig.getTruststore() != null) {
-			TruststoreConfiguration truststoreConfig = sslConfig.getTruststore();
+		if (config.getTruststore() != null) {
+			TruststoreConfiguration truststoreConfig = config.getTruststore();
 			File file = new File(truststoreConfig.getFile());
 			if (truststoreConfig.getPassword() == null) {
 				builder.truststore(file);

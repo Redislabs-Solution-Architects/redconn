@@ -1,0 +1,72 @@
+RedConn
+=======
+Julien Ruaux <julien@redislabs.com>
+1.0, December 12, 2018, RedisLabs Redis Connectivity Tester
+:toc:
+:toc-placement: preamble
+:toclevels: 1
+:icons: font
+
+// Need some preamble to get TOC:
+{empty}
+
+== Build
+
+----
+git clone https://github.com/Redislabs-Solution-Architects/redconn.git
+cd redconn
+mvn clean install
+----
+
+== Run
+
+=== Without SSL
+-----
+java -jar target/redconn-0.0.1-SNAPSHOT.jar --host=redis-12000.demo.redislabs.com --port=12000 --password=<password> --timeout=500
+-----
+
+
+=== With SSL
+-----
+java -jar target/redconn-0.0.1-SNAPSHOT.jar -Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustStoreType=jks -Djavax.net.ssl.trustStorePassword=<password> -Djavax.net.ssl.keyStore=/path/to/keystore.p12 -Djavax.net.ssl.keyStoreType=pkcs12 -Djavax.net.ssl.keyStorePassword=<password>
+--host=redis-12000.demo.redislabs.com --port=12000 --password=<password> --ssl=true --timeout=500
+-----
+
+== Configuration
+
+|===
+|Property |Description |Default
+
+|`host`
+|Redis database host name
+|`localhost`
+
+|`port`
+|Redis database port
+|`6379`
+
+|`ssl`
+|Enable SSL support
+|`false`
+
+|`password`
+|Redis database password
+|none
+
+|`timeout`
+|Redis connection timeout
+|`2000`
+
+|`client-name`
+|Jedis client name
+|`redconn`
+
+|`dns.ttl`
+|Number of seconds to cache a successful name service lookup
+|`0`
+
+|`dns.negative-ttl`
+|Number of seconds to cache a unsuccessful name service lookup
+|`0`
+|===
+

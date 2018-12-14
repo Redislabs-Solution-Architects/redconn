@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.Data;
+import redis.clients.jedis.Protocol;
 
 @Data
 @Configuration
@@ -16,13 +17,23 @@ public class RedconnConfiguration {
 		Jedis, Lettuce
 	}
 
+	public enum SslProvider {
+		Jdk, OpenSsl
+	}
+
 	private Driver driver = Driver.Jedis;
-	private SslConfiguration ssl;
-	private DnsConfiguration dns = new DnsConfiguration();
-	private String key = "foo";
-	private String value = "bar";
 	private SleepConfiguration sleep = new SleepConfiguration();
 	private String clientName = "redconn";
 	private int numKeys = 100;
-	private int timeout = 300;
+	private DnsConfiguration dns = new DnsConfiguration();
+	private int database = 0;
+	private String host = "localhost";
+	private String password;
+	private int port = 6379;
+	private int connectionTimeout = Protocol.DEFAULT_TIMEOUT;
+	private int socketTimeout = Protocol.DEFAULT_TIMEOUT;
+	private boolean ssl;
+	private SslProvider sslProvider = SslProvider.Jdk;
+	private KeystoreConfiguration keystore;
+	private TruststoreConfiguration truststore;
 }

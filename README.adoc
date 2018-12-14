@@ -1,14 +1,5 @@
 RedConn
 =======
-Julien Ruaux <julien@redislabs.com>
-1.0, December 12, 2018, RedisLabs Redis Connectivity Tester
-:toc:
-:toc-placement: preamble
-:toclevels: 1
-:icons: font
-
-// Need some preamble to get TOC:
-{empty}
 
 == Build
 

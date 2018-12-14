@@ -122,7 +122,7 @@ public class RedconnApplication implements CommandLineRunner {
 	}
 
 	private SslOptions getSslOptions() {
-		io.lettuce.core.SslOptions.Builder builder = SslOptions.builder();
+		SslOptions.Builder builder = SslOptions.builder();
 		switch (config.getSslProvider()) {
 		case OpenSsl:
 			builder.openSslProvider();

@@ -59,8 +59,7 @@ public class RedconnApplication implements CommandLineRunner {
 		sslParameters.setEndpointIdentificationAlgorithm("HTTPS");
 		HostnameVerifier hostnameVerifier = null;
 		GenericObjectPoolConfig<Object> poolConfig = new GenericObjectPoolConfig<>();
-		log.info("Connecting using Jedis with connection-timeout={} and socket-timeout={}",
-				config.getConnectionTimeout(), config.getSocketTimeout());
+		log.info("Connecting using Jedis with {}", config);
 		JedisPool jedisPool = new JedisPool(poolConfig, config.getHost(), config.getPort(),
 				config.getConnectionTimeout(), config.getSocketTimeout(), config.getPassword(), config.getDatabase(),
 				config.getClientName(), config.isSsl(), sslSocketFactory, sslParameters, hostnameVerifier);

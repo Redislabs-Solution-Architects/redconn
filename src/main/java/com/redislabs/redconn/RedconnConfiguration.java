@@ -5,12 +5,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.Data;
+import lombok.ToString;
 import redis.clients.jedis.Protocol;
 
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "")
 @EnableAutoConfiguration
+@ToString
 public class RedconnConfiguration {
 
 	public static enum Driver {

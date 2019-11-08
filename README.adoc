@@ -27,6 +27,10 @@ java -Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustSto
 |===
 |Property |Description |Default
 
+|`driver`
+|Driver to use (`jedis` or `lettuce`)
+|`lettuce`
+
 |`host`
 |Redis database host name
 |`localhost`

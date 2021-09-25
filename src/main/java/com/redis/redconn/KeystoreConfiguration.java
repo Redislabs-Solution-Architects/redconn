@@ -1,9 +1,9 @@
-package com.redislabs.redconn;
+package com.redis.redconn;
 
 import lombok.Data;
 
 @Data
-public class TruststoreConfiguration {
+public class KeystoreConfiguration {
 
 	private String file;
 	private String password;

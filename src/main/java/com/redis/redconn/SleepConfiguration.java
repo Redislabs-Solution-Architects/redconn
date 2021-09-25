@@ -1,4 +1,4 @@
-package com.redislabs.redconn;
+package com.redis.redconn;
 
 import lombok.Data;
 
@@ -7,5 +7,4 @@ public class SleepConfiguration {
 
 	private long get = 100;
 	private long reconnect = 100;
-
 }

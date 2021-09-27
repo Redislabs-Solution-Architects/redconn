@@ -21,15 +21,12 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class LettuceTest {
-    //make sure we load only class for relevant driver
-    static {
-        System.out.println("...............Loading Lettuce Class..............");
-    }
 
     @Autowired
     private RedconnConfiguration config;
 
     void run() throws InterruptedException {
+        log.info("Connecting using Lettuce with {}", config);
         DefaultClientResources defaultClientResources = DefaultClientResources.builder()
                 .dnsResolver(DnsResolver.unresolved()) //disable dns caching
                 .nettyCustomizer(getNettyCustomizer()) //set

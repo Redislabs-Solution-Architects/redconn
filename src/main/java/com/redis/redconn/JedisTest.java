@@ -18,11 +18,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class JedisTest {
-    //make sure we load only class for relevant driver
-    static {
-            System.out.println("...............Loading Jedis Class..............");
-        }
-
 
     private static final String DNS_CACHE_TTL = "networkaddress.cache.ttl";
     private static final String DNS_CACHE_NEGATIVE_TTL = "networkaddress.cache.negative.ttl";

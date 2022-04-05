@@ -1,4 +1,4 @@
-package com.redislabs.redconn;
+package com.redis.redconn;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -33,8 +33,12 @@ public class RedconnConfiguration {
 	private String host = "localhost";
 	private String password;
 	private int port = 6379;
-	private int connectionTimeout = Protocol.DEFAULT_TIMEOUT;
-	private int socketTimeout = Protocol.DEFAULT_TIMEOUT;
+	private int connectionTimeout = 2000; //milliseconds
+	private int socketTimeout = 2000; //milliseconds
+	private int tcpKeepIdle = 10;
+	private int	tcpKeepIntvl =1;
+	private int  tcpKeepCnt =2;
+	private int tcpUserTimeout = 10;
 	private boolean ssl;
 	private SslProvider sslProvider = SslProvider.Jdk;
 	private KeystoreConfiguration keystore;

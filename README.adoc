@@ -49,18 +49,40 @@ java -Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustSto
 
 |`timeout`
 |Redis connection timeout
-|`2000`
+|`2000` milliseconds
+
+|`socketTimeout`
+|Redis socket timeout
+|`2000` milliseconds
+
+|`tcpKeepIdle`
+|Lettuce only. Redis connection tcp_keepalive_time
+|`10` seconds
+
+|`tcpKeepIntvl`
+|Lettuce only. Redis connection tcp_keepalive_intvl
+|`1`
+
+|`tcpKeepCnt`
+|Lettuce only. Redis connection tcp_keepalive_probes.
+|`2`
+
+|`tcpUserTimeout`
+|Lettuce/Linux only. Redis connection TCP_USER_TIMEOUT
+|`10` seconds
+
+
 
 |`client-name`
 |Jedis client name
 |`redconn`
 
 |`dns-ttl`
-|Number of seconds to cache a successful name service lookup
+|Number of seconds to cache a successful name service lookup used for jedis
 |`0`
 
 |`dns-negative-ttl`
-|Number of seconds to cache a unsuccessful name service lookup
+|Number of seconds to cache a unsuccessful name service lookup used for jedis
 |`0`
 |===
 

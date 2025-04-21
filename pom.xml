@@ -18,6 +18,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<resilience4j.version>1.7.1</resilience4j.version>
 	</properties>
 
 	<dependencies>
@@ -50,6 +51,26 @@
 			<artifactId>netty-transport-native-epoll</artifactId>
 			<classifier>linux-x86_64</classifier>
 		</dependency>
+		<!-- dependencies for Jedis failover with Redis active/active -->
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-all</artifactId>
+			<version>${resilience4j.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-circuitbreaker</artifactId>
+			<version>${resilience4j.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-retry</artifactId>
+			<version>${resilience4j.version}</version>
+			<optional>true</optional>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -64,6 +85,19 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.38</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>			
 		</plugins>
 	</build>
 

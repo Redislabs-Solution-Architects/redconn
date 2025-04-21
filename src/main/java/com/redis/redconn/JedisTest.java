@@ -45,12 +45,12 @@ public class JedisTest {
 
         int numKeys = config.getNumKeys();
         try (Jedis jedis = jedisPool.getResource()) {
-            log.info("Connected to {}:{}", jedis.getClient().getHost(),jedis.getClient().getPort());
+            log.info("Connected to {}", jedis.getClient().toString());//getHost(),jedis.getClient().getPort());
 
             //populate redis with some data
             log.debug("Adding {} keys...", numKeys);
             for (int index = 0; index < numKeys; index++) {
-                jedis.set("key:" + index, "value" + index);
+                jedis.set("redconn:" + index, "value" + index);
             }
         }
 
@@ -60,15 +60,19 @@ public class JedisTest {
             //get Jedis connection from the pool and try to read data
             try (Jedis jedis = jedisPool.getResource()) {
                 for (int index = 0; index < numKeys; index++) {
-                    String value = jedis.get("key:" + index);
+                    long ns1 = System.nanoTime();
+                    String value = jedis.get("redconn:" + index);
                     if (value == null || !value.equals("value" + index)) {
                         log.error("Incorrect value returned: " + value);
+                    }
+                    if (System.nanoTime()>ns1+10_000_000) {
+                        log.error("higher than 10ms");
                     }
                 }
                 log.debug("Successfully performed GET on all {} keys", numKeys);
 
                 if (failed) {
-                    log.error("Reconnected  in {} seconds to {}:{}", TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - lastSuccessTime), jedis.getClient().getHost(), jedis.getClient().getPort());
+                    log.error("Reconnected  in {} seconds to {}", TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - lastSuccessTime), jedis.getClient().toString());//getHost(), jedis.getClient().getPort());
                     failed = false;
                 }
                 //we ran successfully , save the last successful time

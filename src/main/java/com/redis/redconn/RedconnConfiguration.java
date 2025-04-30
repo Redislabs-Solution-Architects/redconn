@@ -43,4 +43,8 @@ public class RedconnConfiguration {
 	private SslProvider sslProvider = SslProvider.Jdk;
 	private KeystoreConfiguration keystore;
 	private TruststoreConfiguration truststore;
+	// Jedis-only optional configuration for failover to an active/active Redis.
+	// Defaults to null (no failover)
+	private String failoverHost = null;
+	private int failoverPort = 6380;
 }

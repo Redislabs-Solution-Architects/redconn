@@ -13,13 +13,13 @@ mvn clean install
 
 === Without SSL
 -----
-java -jar target/redconn-0.0.1-SNAPSHOT.jar --host=redis-12000.demo.redislabs.com --port=12000 --password=<password> --timeout=500
+java -jar target/redconn-1.0.jar --host=redis-12000.demo.redislabs.com --port=12000 --password=<password> --timeout=500
 -----
 
 
 === With SSL
 -----
-java -Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustStoreType=jks -Djavax.net.ssl.trustStorePassword=<password> -Djavax.net.ssl.keyStore=/path/to/keystore.p12 -Djavax.net.ssl.keyStoreType=pkcs12 -Djavax.net.ssl.keyStorePassword=<password> -jar target/redconn-0.0.1-SNAPSHOT.jar --host=redis-12000.demo.redislabs.com --port=12000 --password=<password> --ssl=true --timeout=500
+java -Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustStoreType=jks -Djavax.net.ssl.trustStorePassword=<password> -Djavax.net.ssl.keyStore=/path/to/keystore.p12 -Djavax.net.ssl.keyStoreType=pkcs12 -Djavax.net.ssl.keyStorePassword=<password> -jar target/redconn-1.0.jar --host=redis-12000.demo.redislabs.com --port=12000 --password=<password> --ssl=true --timeout=500
 -----
 
 == Configuration
@@ -71,8 +71,6 @@ java -Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustSto
 |Lettuce/Linux only. Redis connection TCP_USER_TIMEOUT
 |`10` seconds
 
-
-
 |`client-name`
 |Jedis client name
 |`redconn`
@@ -84,6 +82,24 @@ java -Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustSto
 |`dns-negative-ttl`
 |Number of seconds to cache a unsuccessful name service lookup used for jedis
 |`0`
+
+|`failoverHost`
+|Redis database host name of the failover for an active/active configuration
+|`null (no active/active failover)`
+
+|`failoverPort`
+|Redis database port of the failover for an active/active configuration
+|`6380`
+
+
 |===
 
 You can also use `-Dlogging.level.com.redis.redconn=DEBUG` to have slightly more information.
+
+== Run with Jedis failover with Redis active/active
+
+Here is an example running a failover test with a Redis active/active deployment
+-----
+java -jar target/redconn-1.0.jar --host=redis-12000.demo.redislabs.com --port=12000 --password=<password> --timeout=500 \
+    --failoverHost=redis-13000.demo.redislabs.com --failoverPort=13000
+-----

@@ -53,7 +53,7 @@ public class JedisTest {
         poolConfig.setMaxIdle(10);
         poolConfig.setMinIdle(2);
 
-        log.info("Connecting using {}", config);
+        log.info("Connecting using Jedis with {}", config);
         JedisClientConfig genericConfig = DefaultJedisClientConfig.builder()
             .password(config.getPassword())
             .connectionTimeoutMillis(config.getConnectionTimeout())

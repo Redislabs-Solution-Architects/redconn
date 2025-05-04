@@ -1,6 +1,13 @@
 RedConn
 =======
 
+A simple application to test re-connection or failover with Redis, when using Java Jedis or Lettuce.
+
+https://redis.io/docs/latest/develop/clients/lettuce/produsage/
+
+https://redis.io/docs/latest/develop/clients/jedis/produsage/
+
+
 == Build
 
 ----
@@ -15,6 +22,10 @@ mvn clean install
 -----
 java -jar target/redconn-1.0.jar --host=redis-12000.demo.redislabs.com --port=12000 --password=<password> --timeout=500
 -----
+
+=== Without SSL, with Lettuce
+-----
+java -Dlogging.level.com.redis.redconn=DEBUG -jar target/redconn-1.0.jar --port=6379 --driver=lettuce-----
 
 
 === With SSL

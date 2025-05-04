@@ -26,7 +26,7 @@ java -jar target/redconn-1.0.jar --host=redis-12000.demo.redislabs.com --port=12
 === Without SSL, with Lettuce
 -----
 java -Dlogging.level.com.redis.redconn=DEBUG -jar target/redconn-1.0.jar --port=6379 --driver=lettuce-----
-
+-----
 
 === With SSL
 -----

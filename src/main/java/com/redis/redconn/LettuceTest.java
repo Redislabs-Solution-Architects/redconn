@@ -42,7 +42,9 @@ public class LettuceTest {
                 .nettyCustomizer(getNettyCustomizer()) //set
                 .build();
 
-        RedisClient client = RedisClient.create(defaultClientResources, RedisURI.create(config.getHost(), config.getPort()));
+        RedisClient client = RedisClient.create(
+            defaultClientResources,
+            RedisURI.Builder.redis(config.getHost(), config.getPort()).withPassword(config.getPassword().toCharArray()).build());
 
         client.setOptions(getLettuceClientOptions());
         StatefulRedisConnection<String, String> connection = client.connect();
@@ -69,11 +71,11 @@ public class LettuceTest {
                 for (int index = 0; index < numKeys; index++) {
                     long ns1 = System.nanoTime();
                     String value = syncCommands.get("redconn:" + index);
-                    if (value == null || !value.equals("value" + index)) {
-                        log.error("Incorrect value returned for redconn:{} : {}", index, value);
-                    }
                     if (System.nanoTime()>ns1+10_000_000) {
                         log.error("Read took higher than 10ms");
+                    }
+                    if (value == null || !value.equals("value" + index)) {
+                        log.error("Incorrect value returned for redconn:{} : {}", index, value);
                     }
                 }
                 log.debug("Successfully performed GET on all {} keys", numKeys);

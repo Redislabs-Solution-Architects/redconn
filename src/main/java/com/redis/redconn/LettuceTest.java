@@ -41,10 +41,14 @@ public class LettuceTest {
                 .dnsResolver(DnsResolver.unresolved()) //disable dns caching
                 .nettyCustomizer(getNettyCustomizer()) //set
                 .build();
-
+        RedisURI.Builder redisURIBuilder = RedisURI.builder();
+        if (config.isSsl()) redisURIBuilder.withSsl(true);
         RedisClient client = RedisClient.create(
             defaultClientResources,
-            RedisURI.Builder.redis(config.getHost(), config.getPort()).withPassword(config.getPassword().toCharArray()).build());
+            redisURIBuilder.withHost(config.getHost())
+                            .withPort(config.getPort())
+                            .withPassword(config.getPassword().toCharArray())
+                            .build());
 
         client.setOptions(getLettuceClientOptions());
         StatefulRedisConnection<String, String> connection = client.connect();
